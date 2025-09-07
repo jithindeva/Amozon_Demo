@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Amazon Clone</title>
+  <style>
+    body {font-family: Arial, sans-serif; margin:0; background:#f2f2f2;}
+    .container {max-width:1200px;margin:0 auto;padding:0 16px;}
+    header.nav {background:#131921;color:#fff;padding:10px 0;}
+    .nav-inner {display:flex;align-items:center;justify-content:space-between;}
+    .logo .box {font-size:20px;font-weight:bold;background:#ff9900;padding:4px 8px;border-radius:4px;}
+    .search {display:flex;flex:1;margin:0 20px;}
+    .search select,.search input,.search button {padding:6px;border:1px solid #ccc;}
+    .search input {flex:1;}
+    .nav-actions {display:flex;align-items:center;gap:20px;color:#fff;font-size:14px;}
+    .cart {position:relative;display:flex;align-items:center;cursor:pointer;}
+    .cart svg {margin-right:6px;}
+    .cart .count {position:absolute;top:-5px;right:-10px;background:red;color:#fff;font-size:12px;
+      border-radius:50%;padding:2px 6px;}
+    .hero {background:#ddd;padding:40px;text-align:center;position:relative;}
+    .hero img {width:100%;max-height:300px;object-fit:cover;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.3);}
+    .hero-text {position:absolute;top:30%;left:50%;transform:translate(-50%,-50%);color:#fff;text-shadow:2px 2px 6px rgba(0,0,0,0.7);}
+    .hero-text h1 {font-size:36px;margin-bottom:8px;}
+    .products {display:flex;overflow-x:auto;gap:16px;padding:10px;}
+    .products::-webkit-scrollbar {display:none;}
+    .product-card {background:#fff;min-width:250px;padding:12px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.1);position:relative;}
+    .product-card img {width:100%;height:180px;object-fit:contain;border-radius:6px;}
+    .product-card h3 {font-size:16px;margin:8px 0;}
+    .product-card p {margin:4px 0;}
+    .btn {background:#ff9900;color:#000;padding:8px 12px;border:none;border-radius:4px;cursor:pointer;}
+    .add-btn-overlay {background:#ff9900;padding:6px 10px;border-radius:4px;font-size:14px;cursor:pointer;display:inline-block;margin-top:6px;}
+    footer {background:#232f3e;color:#fff;padding:20px 0;margin-top:20px;}
+    .footer-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:20px;}
+    /* Cart styling */
+    .cart-item {display:flex;align-items:center;gap:12px;background:#fff;margin:10px 0;padding:10px;border-radius:6px;}
+    .cart-item img {width:80px;height:80px;object-fit:contain;border-radius:6px;}
+  </style>
+</head>
+<body>
+
+  <!-- Home Page -->
+  <div id="homePage">
+    <header class="nav">
+      <div class="container nav-inner">
+        <div class="logo" aria-label="Site logo">
+          <div class="box">AMZONE</div>
+          <div style="color:#fff"><small>Delivering Smiles</small></div>
+        </div>
+
+        <div class="search" role="search" aria-label="Search">
+          <select id="categorySelect" aria-label="Category">
+            <option value="all">All</option>
+          </select>
+          <input id="searchInput" placeholder="Search Amazon Clone" aria-label="Search input" />
+          <button id="searchBtn" aria-label="Search button">Search</button>
+        </div>
+
+        <div class="nav-actions">
+          <div class="cart" id="cartBtn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M3 3h2l.4 2M7 13h10l4-8H5.4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Cart</span>
+            <div class="count" id="cartCount">0</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- Hero (Festival Offer Poster) -->
+      <section class="hero" id="homeSection">
+        <img src="https://img.freepik.com/free-vector/diwali-sale-banner-template-with-lamps_1017-21381.jpg" alt="Festival Offer Banner">
+        <div class="hero-text">
+          <h1>Festival Mega Sale 🎉</h1>
+          <p>Special Discounts – Limited Time Only!</p>
+        </div>
+      </section>
+
+      <!-- Products -->
+      <section id="productSection" style="margin-top:18px">
+        <h2>Featured Products</h2>
+        <div class="products" id="productGrid"></div>
+      </section>
+
+      <!-- Cart page -->
+      <section id="cartPage" style="display:none">
+        <h2>Your Shopping Cart</h2>
+        <div class="cart-list" id="cartList"></div>
+        <button class="btn" id="backToShopBtn">⬅ Back to Shopping</button>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <h4>Get to Know Us</h4>
+            <div class="small">About · Careers · Press</div>
+          </div>
+          <div>
+            <h4>Make Money with Us</h4>
+            <div class="small">Sell on AMZ · Become an Affiliate</div>
+          </div>
+          <div>
+            <h4>Customer Service</h4>
+            <div class="small">Help · Returns · Shipping</div>
+          </div>
+          <div>
+            <h4>Legal</h4>
+            <div class="small">Privacy Notice · Terms</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;text-align:center;color:#ccc">© Amazon Clone</div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Sample products (Mobiles + Laptops included)
+    const products = [
+      // Mobiles
+      {id:1, name:"Apple iPhone 14", price:69999, image:"https://m.media-amazon.com/images/I/61bK6PMOC3L._AC_SY355_.jpg"},
+      {id:2, name:"Samsung Galaxy S23", price:62999, image:"https://m.media-amazon.com/images/I/71HUnJvHsbL._AC_SY355_.jpg"},
+      {id:3, name:"OnePlus 11R 5G", price:44999, image:"https://m.media-amazon.com/images/I/61Io5-ojWUL._AC_SY355_.jpg"},
+      {id:4, name:"Xiaomi 13 Pro", price:56999, image:"https://m.media-amazon.com/images/I/71BW1kSdV-L._AC_SY355_.jpg"},
+
+      // Laptops
+      {id:5, name:"HP Pavilion Laptop", price:55999, image:"https://m.media-amazon.com/images/I/81Ne5qKmE8L._AC_SY355_.jpg"},
+      {id:6, name:"Dell Inspiron 15", price:49999, image:"https://m.media-amazon.com/images/I/71+nlcdKXPL._AC_SY355_.jpg"},
+      {id:7, name:"Apple MacBook Air M2", price:99999, image:"https://m.media-amazon.com/images/I/71jG+e7roXL._AC_SY355_.jpg"},
+      {id:8, name:"Lenovo IdeaPad Slim 5", price:64999, image:"https://m.media-amazon.com/images/I/71zTi0aEABL._AC_SY355_.jpg"},
+    ];
+
+    let cart = [];
+
+    const productGrid = document.getElementById("productGrid");
+    const cartCount = document.getElementById("cartCount");
+    const cartList = document.getElementById("cartList");
+    const cartPage = document.getElementById("cartPage");
+    const productSection = document.getElementById("productSection");
+    const homeSection = document.getElementById("homeSection");
+    const cartBtn = document.getElementById("cartBtn");
+    const backToShopBtn = document.getElementById("backToShopBtn");
+
+    // Render products
+    function renderProducts() {
+      productGrid.innerHTML = "";
+      products.forEach(p=>{
+        const div=document.createElement("div");
+        div.className="product-card";
+        div.innerHTML=`
+          <img src="${p.image}" alt="${p.name}">
+          <h3>${p.name}</h3>
+          <p><del>₹${(p.price + 5000).toLocaleString()}</del> <strong>₹${p.price.toLocaleString()}</strong></p>
+          <div class="add-btn-overlay" onclick="addToCart(${p.id})">Add to Cart</div>
+        `;
+        productGrid.appendChild(div);
+      });
+    }
+
+    // Add item
+    function addToCart(id) {
+      const item = products.find(p=>p.id===id);
+      const exists = cart.find(p=>p.id===id);
+      if(!exists) {
+        cart.push({...item, qty:1});
+      } else {
+        exists.qty++;
+      }
+      updateCart();
+    }
+
+    // Remove item
+    function removeFromCart(id) {
+      cart = cart.filter(p=>p.id!==id);
+      updateCart();
+    }
+
+    // Update cart UI
+    function updateCart() {
+      cartCount.textContent=cart.reduce((a,b)=>a+b.qty,0);
+      cartList.innerHTML="";
+      if(cart.length === 0){
+        cartList.innerHTML="<p>Your cart is empty.</p>";
+        return;
+      }
+      cart.forEach(p=>{
+        const div=document.createElement("div");
+        div.className="cart-item";
+        div.innerHTML=`
+          <img src="${p.image}" alt="${p.name}">
+          <div>
+            <strong>${p.name}</strong><br>
+            Qty: ${p.qty} · Price: ₹${(p.price*p.qty).toLocaleString()}
+          </div>
+          <button class="btn" onclick="removeFromCart(${p.id})">Remove</button>
+        `;
+        cartList.appendChild(div);
+      });
+    }
+
+    // Show cart page
+    cartBtn.addEventListener("click", ()=>{
+      productSection.style.display="none";
+      homeSection.style.display="none";
+      cartPage.style.display="block";
+    });
+
+    // Back to shopping
+    backToShopBtn.addEventListener("click", ()=>{
+      cartPage.style.display="none";
+      productSection.style.display="block";
+      homeSection.style.display="block";
+    });
+
+    // Initial render
+    renderProducts();
+  </script>
+</body>
+</html>
